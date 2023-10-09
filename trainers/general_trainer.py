@@ -4,6 +4,8 @@ import torch
 import torch.nn as nn
 import numpy as np
 
+
+
 class Trainer:
     def __init__(self, generator, discriminator, generator_loss, discriminator_loss, generator_optimizer, discriminator_optimizer):
         self.generator = generator
@@ -21,14 +23,14 @@ class Trainer:
             self.generator_optimizer.zero_grad()
 
             # Create noisy input for generator
-            noise = np.random.normal(0,1,[batch_size,input_length])
+            noise = torch.randint(0, 2, size=(batch_size, input_length)).float()
+            #noise = np.random.normal(0,1,[batch_size,input_length])
             fake_data = self.generator(noise)
 
             # Generate examples of real data
             idx = np.random.randint(low=0, high=train_data.shape[0],size=batch_size)
             true_data = train_data[idx]
-            true_labels = np.ones(batch_size)
-            true_labels = torch.tensor(true_labels).float()
+            true_labels = torch.ones(batch_size,1)            
             true_data = torch.tensor(true_data).float()
 
 
@@ -46,7 +48,7 @@ class Trainer:
             true_discriminator_loss = self.discriminator_loss(true_discriminator_out, true_labels)
 
             generator_discriminator_out = self.discriminator(fake_data.detach())
-            generator_discriminator_loss = self.generator_loss(generator_discriminator_out, torch.zeros(batch_size))
+            generator_discriminator_loss = self.generator_loss(generator_discriminator_out, torch.zeros(batch_size,1))
             discriminator_loss = (true_discriminator_loss + generator_discriminator_loss) / 2
             discriminator_loss.backward()
             self.discriminator_optimizer.step()
