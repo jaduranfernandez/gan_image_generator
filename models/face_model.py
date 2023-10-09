@@ -1,6 +1,3 @@
-import matplotlib.pyplot as plt 
-import numpy as np
-import tensorflow as tf
 from keras import layers, Sequential, optimizers
 
 def build_generator():

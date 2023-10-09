@@ -20,3 +20,4 @@ def create_dataset(folder_path, file_name, data_path, first_image, last_image):
         new_image = (2*new_image) - 1
         values[it-1,:] = new_image
     np.save(folder_path + file_name, values)
+
