@@ -23,7 +23,7 @@ class Trainer:
             self.generator_optimizer.zero_grad()
 
             # Create noisy input for generator
-            noise = torch.randint(0, 2, size=(batch_size, input_length)).float()
+            noise = torch.tensor(np.random.normal(0, 1, (batch_size, input_length)), dtype=torch.float)
             #noise = np.random.normal(0,1,[batch_size,input_length])
             fake_data = self.generator(noise)
 
