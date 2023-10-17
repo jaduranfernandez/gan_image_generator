@@ -53,5 +53,7 @@ class Trainer:
             discriminator_loss.backward()
             self.discriminator_optimizer.step()
 
+            # if i==1 or i%100 == 0:
+            #     torch.save(self.generator, str.format("saved_models/generator_{0}.pth",i))
 
 
