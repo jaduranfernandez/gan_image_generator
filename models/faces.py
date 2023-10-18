@@ -2,10 +2,10 @@ import torch.nn as nn
 
 
 class FaceGenerator(nn.Module):
-    def __init__(self):
+    def __init__(self, input_length = 100):
         super(FaceGenerator, self).__init__()
         self.fc = nn.Sequential(
-            nn.Linear(100, 1024*4*4),
+            nn.Linear(input_length, 1024*4*4),
             nn.BatchNorm1d(1024*4*4),
             nn.LeakyReLU(negative_slope=0.2)            
         )
