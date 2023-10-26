@@ -1,38 +1,42 @@
-import numpy as np
-from models.face_model import build_GAN, build_generator, build_discriminator
+import torch.nn as nn
+import torch
+from torch.utils.data import DataLoader 
+from data_manipulation.faces import FacesDataset
+from models.faces import FaceGenerator, FaceDiscriminator
+from trainers.general_trainer import Trainer
+from models.faces import init_weights
 
 
-x_train = np.load("data/faces_4000.npy")
-
+# Configuration variables
+data_dir = 'data/img_align_celeba/smaller_sample/'
 batch_size = 32
-n_iterations = 1000
-n_bathes = x_train.shape[0]/batch_size
-input_size = 100
+epochs = 40
+input_length = 100
 
 
-generator = build_generator()
-discriminator = build_discriminator()
-gan = build_GAN(generator, discriminator)
+print("Skere")
 
-for i in range(1,n_iterations+1):
-    print("Epoch " + str(i))
+# Load data
+dataset = FacesDataset(data_dir)
+dataloader = DataLoader(dataset, batch_size=batch_size, drop_last=True, shuffle=True)
 
-    # Crear un "batch" de imágenes falsas y otro con imágenes reales
-    noise = np.random.normal(0,1,[batch_size,input_size])
-    false_images = generator.predict(noise)
 
-    idx = np.random.randint(low=0, high=x_train.shape[0],size=batch_size)
-    true_images = x_train[idx]
 
-    discriminator.trainable = True
-    dError_reales = discriminator.train_on_batch(true_images,
-        np.ones(batch_size)*0.9)
-    dError_falsas = discriminator.train_on_batch(false_images,
-        np.zeros(batch_size)*0.1)
-    
-    discriminator.trainable = False
-    noise = np.random.normal(0,1,[batch_size,input_size])
-    gError = gan.train_on_batch(noise, np.ones(batch_size))
-    if i==1 or i%100 == 0:
-        generator.save(str.format("saved_models/generator_{0}.h5",i))
+generator = FaceGenerator(input_length)
+discriminator = FaceDiscriminator()
+generator_loss = nn.BCELoss()
+discriminator_loss = nn.BCELoss()
+generator_optimizer = torch.optim.Adam(generator.parameters(), lr=0.001)
+discriminator_optimizer = torch.optim.Adam(discriminator.parameters(), lr=0.001)
+
+
+generator.apply(init_weights)
+discriminator.apply(init_weights)
+
+
+trainer = Trainer(generator, discriminator, generator_loss, discriminator_loss, generator_optimizer, discriminator_optimizer)
+trainer.train(dataloader, input_length, n_epochs= epochs)
+
+
+
 
