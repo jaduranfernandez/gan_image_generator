@@ -11,6 +11,7 @@ class FacesDataset(Dataset):
         self.image_paths = [os.path.join(data_dir, filename) for filename in os.listdir(data_dir)]
         if(transform==None):
             transform = transforms.Compose([
+                transforms.CenterCrop(128),
                 transforms.Resize((128, 128)),  # Resize images to 128x128
                 transforms.ToTensor(),  # Convert images to tensors
                 transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])  # Normalize to [-1, 1]
