@@ -8,15 +8,14 @@ from tqdm import tqdm
 
 
 def draw_images(generator, epoch, input_length):
-    seed = 12
     n_rows = 2
     n_cols = 3
     scale = 3
     fig, axs = plt.subplots(n_rows, n_cols, figsize=(n_cols*scale, n_rows*scale))
 
 
-    np.random.seed(seed)
-    noise = torch.tensor(np.random.normal(0, 1, (n_rows*n_cols, input_length)), dtype=torch.float)
+    #noise = torch.tensor(np.random.normal(0, 1, (n_rows*n_cols, input_length)), dtype=torch.float)
+    noise = torch.randn(n_rows*n_cols, input_length, 1, 1)
 
     generator.to(torch.device("cpu"))
     generator.eval()
@@ -33,7 +32,6 @@ def draw_images(generator, epoch, input_length):
             axs[row_id, col_id].set_yticklabels([])
             #axs[0, 0].set_title('Axis [0, 0]')
     fig.savefig("results/prediction_{0}.jpg".format(epoch))
-
 
 
 
