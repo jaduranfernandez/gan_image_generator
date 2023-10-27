@@ -1,9 +1,7 @@
-from PIL import Image
-import random
-import glob
 import matplotlib.pyplot as plt
 from data_manipulation.anime_faces import AnimeFacesDataset
 from torch.utils.data import DataLoader 
+from tqdm import tqdm 
 
 link = "https://aihalapathirana.medium.com/generative-adversarial-networks-for-anime-face-generation-pytorch-1b4037930e21"
 
