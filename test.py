@@ -18,3 +18,5 @@ print(len(dataset))
 batch_size = 32
 dataloader = DataLoader(dataset, batch_size=batch_size, drop_last=True, shuffle=True)
 draw_image(dataloader.dataset[0])
+
+
